@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Hello, Render!"
+    return render_template('index.html')
 
 def authenticate_google_sheets():
     # Define the scope

@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, 
-initial-scale=1.0">
-    <title>Band Request Bot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Que Bandas Queres Ver ao Vivo?</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -19,7 +21,7 @@ initial-scale=1.0">
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
         }
-        input, button {
+        input, select, button {
             width: 80%;
             padding: 10px;
             margin: 10px;
@@ -43,37 +45,58 @@ initial-scale=1.0">
 <body>
 
     <div class="container">
-        <h2>Request a Band 🎶</h2>
-        <input type="text" id="bandName" placeholder="Enter band 
-name">
-        <button onclick="submitRequest()">Submit Request</button>
+        <h2>Que Bandas Queres Ver Ao Vivo?</h2>
+        
+        <!-- Band Name Input -->
+        <input type="text" id="bandName" placeholder="Nome da Banda">
+
+        <!-- City Selection Dropdown -->
+        <select id="cityName">
+            <option value="" disabled selected>Em que cidade?</option>
+            <option value="Aveiro">Aveiro</option>
+	    <option value="Braga">Braga</option>
+	    <option value="Coimbra">Coimbra</option>
+	    <option value="Coruna">A Coruña</option>
+	    <option value="Faro">Faro</option>
+	    <option value="Leiria">Leiria</option>
+      	    <option value="Lisboa">Lisbon</option>
+            <option value="Porto">Porto</option>
+            <option value="Santiago de Compostela">Santiago de Compostela</option>
+            <option value="Vigo">Vigo</option>
+            <option value="Viseu">Viseu</option>
+        </select>
+
+        <!-- Submit Button -->
+        <button onclick="submitRequest()">Pedir Banda!</button>
+        
+        <!-- Response Message -->
         <p id="response"></p>
 
-        <h3>Top Requested Bands</h3>
+    <h3>Bandas Mais Pedidas</h3>
         <button onclick="fetchTopBands()">Show Top Bands</button>
         <ul id="topBandsList"></ul>
     </div>
 
     <script>
         function submitRequest() {
-            const bandName = 
-document.getElementById("bandName").value;
-            if (!bandName) {
-                document.getElementById("response").innerText = 
-"Please enter a band name!";
+            const bandName = document.getElementById("bandName").value;
+            const cityName = document.getElementById("cityName").value;
+
+            if (!bandName || !cityName) {
+                document.getElementById("response").innerText = "Insere uma banda e uma cidade!";
                 return;
             }
 
             fetch("/add_band", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ band_name: bandName })
+                body: JSON.stringify({ band_name: bandName, city: cityName })
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById("response").innerText = 
-data.message;
+                document.getElementById("response").innerText = data.message;
                 document.getElementById("bandName").value = "";
+                document.getElementById("cityName").selectedIndex = 0;
             })
             .catch(error => console.error("Error:", error));
         }
@@ -82,8 +105,7 @@ data.message;
             fetch("/top_bands")
             .then(response => response.json())
             .then(data => {
-                const list = 
-document.getElementById("topBandsList");
+                const list = document.getElementById("topBandsList");
                 list.innerHTML = "";
                 data.top_bands.split("\n").forEach(band => {
                     if (band.trim()) {
@@ -99,16 +121,3 @@ document.getElementById("topBandsList");
 
 </body>
 </html>
-<!DOCTYPE 
-html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Band Request Bot</title>
-</head>
-<body>
-    <h1>🔥 Hello World! If you see this, Flask is working! 🔥</h1>
-</body>
-</html>
-

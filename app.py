@@ -9,8 +9,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    print("🔥 Serving index.html!")  # Debugging print
-    return render_template('index.html')
+    return "<h1>Hello from Flask! 🚀</h1>"
 
 def authenticate_google_sheets():
     # Define the scope
@@ -27,12 +26,13 @@ def authenticate_google_sheets():
     
     return client
 
-def add_band_request(band_name, user_name="Anonymous"):
+def add_band_request(band_name, city, user_name="Anonymous"):
     client = authenticate_google_sheets()
-    sheet = client.open("Band Requests").sheet1  # Open the first sheet in the document
-    sheet.append_row([band_name, user_name])
-    
-    return f"Added request for: {band_name}"
+    sheet = client.open("Band Requests").sheet1  
+    sheet.append_row([band_name, city, user_name])
+
+    return f"Added request for: {band_name} in {city}"
+
 
 def get_most_requested_bands():
     client = authenticate_google_sheets()
@@ -56,13 +56,15 @@ def get_most_requested_bands():
 def handle_band_request():
     data = request.json
     band_name = data.get("band_name")
+    city = data.get("city")
     user_name = data.get("user_name", "Anonymous")
-    
-    if not band_name:
-        return jsonify({"error": "Band name is required"}), 400
-    
-    response = add_band_request(band_name, user_name)
+
+    if not band_name or not city:
+        return jsonify({"error": "Band name and city are required"}), 400
+
+    response = add_band_request(band_name, city, user_name)
     return jsonify({"message": response})
+
 
 @app.route('/top_bands', methods=['GET'])
 def show_top_bands():

@@ -9,6 +9,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
+    print("🔥 Serving index.html!")  # Debugging print
     return render_template('index.html')
 
 def authenticate_google_sheets():
@@ -69,5 +70,6 @@ def show_top_bands():
     return jsonify({"top_bands": response})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5001))  
+    app.run(host="0.0.0.0", port=port)
 

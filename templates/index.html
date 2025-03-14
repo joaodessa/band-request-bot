@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, 
+initial-scale=1.0">
+    <title>Band Request Bot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+        input, button {
+            width: 80%;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #response {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Request a Band 🎶</h2>
+        <input type="text" id="bandName" placeholder="Enter band 
+name">
+        <button onclick="submitRequest()">Submit Request</button>
+        <p id="response"></p>
+
+        <h3>Top Requested Bands</h3>
+        <button onclick="fetchTopBands()">Show Top Bands</button>
+        <ul id="topBandsList"></ul>
+    </div>
+
+    <script>
+        function submitRequest() {
+            const bandName = 
+document.getElementById("bandName").value;
+            if (!bandName) {
+                document.getElementById("response").innerText = 
+"Please enter a band name!";
+                return;
+            }
+
+            fetch("/add_band", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ band_name: bandName })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("response").innerText = 
+data.message;
+                document.getElementById("bandName").value = "";
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+        function fetchTopBands() {
+            fetch("/top_bands")
+            .then(response => response.json())
+            .then(data => {
+                const list = 
+document.getElementById("topBandsList");
+                list.innerHTML = "";
+                data.top_bands.split("\n").forEach(band => {
+                    if (band.trim()) {
+                        const li = document.createElement("li");
+                        li.innerText = band;
+                        list.appendChild(li);
+                    }
+                });
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+
+</body>
+</html>
+<!DOCTYPE 
+html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Band Request Bot</title>
+</head>
+<body>
+    <h1>🔥 Hello World! If you see this, Flask is working! 🔥</h1>
+</body>
+</html>
+

@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "<h1>Pede à Crowdmusic</h1>"
+    return render_template('index.html') 
 
 def authenticate_google_sheets():
     # Define the scope
@@ -56,7 +56,7 @@ def get_most_requested_bands():
 def handle_band_request():
     data = request.json
     band_name = data.get("band_name")
-    city = data.get("city")
+    city = data.get("city")  #
     user_name = data.get("user_name", "Anonymous")
 
     if not band_name or not city:

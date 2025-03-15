@@ -245,7 +245,29 @@
             })
             .catch(error => console.error("Error:", error));
         }
-        
+        function submitRequest() {
+            const bandName = document.getElementById("bandName").value;
+            const cityName = document.getElementById("cityName").value;
+
+            if (!bandName || !cityName) {
+                document.getElementById("response").innerText = "Insere uma banda e uma cidade!";
+                return;
+            }
+
+            fetch("/add_band", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ band_name: bandName, city: cityName })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("response").innerText = data.message;
+                document.getElementById("bandName").value = "";
+                document.getElementById("cityName").selectedIndex = 0;
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
     </script>
 
 </body>

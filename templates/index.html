@@ -65,15 +65,18 @@
         .form-group {
             width: 100%;
             margin: 10px 0;
+            display: flex;
+            justify-content: center;
         }
 
         input, select, button {
-            width: 100%;  /* Ensure all elements take full width */
-            max-width: 80%;  /* Match buttons & dropdown */
-            padding: 10px;
-            margin: 10px;
+            width: 100%;  
+            max-width: 80%;  
+            padding: 12px;
+            margin: 10px 0;
             border-radius: 5px;
             border: 1px solid #ccc;
+            box-sizing: border-box;
         }
 
         button {
@@ -82,6 +85,7 @@
             cursor: pointer;
             font-weight: bold;
             border: none;
+            transition: 0.3s;
         }
 
         button:hover {
@@ -97,13 +101,17 @@
         .top-bands-container {
             text-align: left;
             margin-top: 20px;
+            padding: 15px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 8px rgba(0,0,0,0.1);
         }
 
         .band-card {
             background: #f9f9f9;
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 6px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -207,30 +215,21 @@
         }
 
         function fetchTopBands() {
-   
             fetch("/top_bands")
             .then(response => response.json())
             .then(data => {
                 const list = document.getElementById("topBandsList");
-                list.innerHTML = "";  // Clear previous results
+                list.innerHTML = "";  
 
-                const bands = data.top_bands.split("\n").filter(b => b.trim()); // Remove empty lines
-
-                if (bands.length === 0) {
-                    list.innerHTML = "<li>No requests yet!</li>";
-                    return;
-                }
+                const bands = data.top_bands.split("\n").filter(b => b.trim()); 
 
                 bands.forEach((band, index) => {
-                    if (index === 0 && band.includes("Most requested bands")) return; // Ignore first title if needed
-                    const li = document.createElement("li");
-                    li.innerText = band;
-                    list.appendChild(li);
+                    const bandCard = `<div class="band-card"><span class="band-rank">${index + 1}.</span> <span class="band-name">${band}</span></div>`;
+                    list.innerHTML += bandCard;
                 });
             })
             .catch(error => console.error("Error:", error));
         }
-
     </script>
 
 </body>

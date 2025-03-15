@@ -68,11 +68,12 @@
         }
 
         input, select, button {
-            width: 100%; /* Ensures all elements have the same width */
-            padding: 12px;
+            width: 100%;  /* Ensure all elements take full width */
+            max-width: 80%;  /* Match buttons & dropdown */
+            padding: 10px;
+            margin: 10px;
             border-radius: 5px;
             border: 1px solid #ccc;
-            font-size: 16px;
         }
 
         button {
@@ -206,30 +207,30 @@
         }
 
         function fetchTopBands() {
+   
             fetch("/top_bands")
             .then(response => response.json())
             .then(data => {
                 const list = document.getElementById("topBandsList");
-                list.innerHTML = "";
-                let bandsArray = data.top_bands.split("\n").filter(band => band.trim());
+                list.innerHTML = "";  // Clear previous results
 
-                bandsArray.forEach((band, index) => {
-                    let [bandName, count] = band.split(": ");
+                const bands = data.top_bands.split("\n").filter(b => b.trim()); // Remove empty lines
 
-                    const bandCard = document.createElement("div");
-                    bandCard.classList.add("band-card");
+                if (bands.length === 0) {
+                    list.innerHTML = "<li>No requests yet!</li>";
+                    return;
+                }
 
-                    bandCard.innerHTML = `
-                        <span class="band-rank">#${index + 1}</span>
-                        <span class="band-name">${bandName}</span>
-                        <span class="band-count">🔥 ${count} pedidos</span>
-                    `;
-
-                    list.appendChild(bandCard);
+                bands.forEach((band, index) => {
+                    if (index === 0 && band.includes("Most requested bands")) return; // Ignore first title if needed
+                    const li = document.createElement("li");
+                    li.innerText = band;
+                    list.appendChild(li);
                 });
             })
             .catch(error => console.error("Error:", error));
         }
+
     </script>
 
 </body>

@@ -61,18 +61,26 @@
             box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
         }
 
+        /* 🎯 FORM STYLING */
+        .form-group {
+            width: 100%;
+            margin: 10px 0;
+        }
+
         input, select, button {
-            width: 80%;
-            padding: 10px;
-            margin: 10px;
+            width: 100%; /* Ensures all elements have the same width */
+            padding: 12px;
             border-radius: 5px;
             border: 1px solid #ccc;
+            font-size: 16px;
         }
 
         button {
             background-color: #D92027; /* Red button */
             color: white;
             cursor: pointer;
+            font-weight: bold;
+            border: none;
         }
 
         button:hover {
@@ -83,6 +91,40 @@
             margin-top: 20px;
             font-weight: bold;
         }
+
+        /* 🎤 STYLING FOR TOP BANDS */
+        .top-bands-container {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .band-card {
+            background: #f9f9f9;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid #D92027;
+            font-size: 16px;
+        }
+
+        .band-rank {
+            font-weight: bold;
+            color: #D92027;
+        }
+
+        .band-name {
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        .band-count {
+            font-weight: bold;
+            color: #555;
+        }
+
     </style>
 </head>
 <body>
@@ -104,32 +146,38 @@
         <h2>Que Bandas Queres Ver Ao Vivo?</h2>
 
         <!-- Band Name Input -->
-        <input type="text" id="bandName" placeholder="Nome da Banda">
+        <div class="form-group">
+            <input type="text" id="bandName" placeholder="Nome da Banda">
+        </div>
 
         <!-- City Selection Dropdown -->
-        <select id="cityName">
-            <option value="" disabled selected>Em que cidade?</option>
-            <option value="Aveiro">Aveiro</option>
-            <option value="Braga">Braga</option>
-            <option value="Coimbra">Coimbra</option>
-            <option value="Coruna">A Coruña</option>
-            <option value="Faro">Faro</option>
-            <option value="Leiria">Leiria</option>
-            <option value="Lisboa">Lisbon</option>
-            <option value="Porto">Porto</option>
-            <option value="Santiago de Compostela">Santiago de Compostela</option>
-            <option value="Vigo">Vigo</option>
-            <option value="Viseu">Viseu</option>
-        </select>
+        <div class="form-group">
+            <select id="cityName">
+                <option value="" disabled selected>Em que cidade?</option>
+                <option value="Aveiro">Aveiro</option>
+                <option value="Braga">Braga</option>
+                <option value="Coimbra">Coimbra</option>
+                <option value="Coruna">A Coruña</option>
+                <option value="Faro">Faro</option>
+                <option value="Leiria">Leiria</option>
+                <option value="Lisboa">Lisboa</option>
+                <option value="Porto">Porto</option>
+                <option value="Santiago de Compostela">Santiago de Compostela</option>
+                <option value="Vigo">Vigo</option>
+                <option value="Viseu">Viseu</option>
+            </select>
+        </div>
 
         <!-- Submit Button -->
-        <button onclick="submitRequest()">Pedir Banda!</button>
-        
+        <div class="form-group">
+            <button onclick="submitRequest()">Pedir Banda!</button>
+        </div>
+
         <!-- Response Message -->
         <p id="response"></p>
 
-        <h3>🎤 Bandas Mais Pedidas</h3>
-        <button onclick="fetchTopBands()">🔍 Ver Top Bandas</button>
+        <h3>Bandas Mais Pedidas</h3>
+        <button onclick="fetchTopBands()">Ver Top Bandas</button>
         <div id="topBandsList" class="top-bands-container"></div>
     </div>
 

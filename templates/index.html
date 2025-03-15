@@ -219,17 +219,33 @@
             .then(response => response.json())
             .then(data => {
                 const list = document.getElementById("topBandsList");
-                list.innerHTML = "";  
+                list.innerHTML = "";  // Clear previous results
 
-                const bands = data.top_bands.split("\n").filter(b => b.trim()); 
+                const bands = data.top_bands.split("\n").filter(b => b.trim()); // Remove empty lines
 
+                // 🚨 FIX: Ensure we don't include the title "Most requested bands"
+                if (bands.length > 0 && bands[0].toLowerCase().includes("most requested bands")) {
+                    bands.shift(); // Remove the first entry if it's the title
+                }
+
+                if (bands.length === 0) {
+                    list.innerHTML = "<p>Nenhuma banda foi pedida ainda.</p>";
+                    return;
+                }
+
+                // Display bands as a ranked list with correct formatting
                 bands.forEach((band, index) => {
-                    const bandCard = `<div class="band-card"><span class="band-rank">${index + 1}.</span> <span class="band-name">${band}</span></div>`;
+                    const bandCard = `
+                        <div class="band-card">
+                            <span class="band-rank">${index + 1}.</span> 
+                            <span class="band-name">${band}</span>
+                        </div>`;
                     list.innerHTML += bandCard;
                 });
             })
             .catch(error => console.error("Error:", error));
         }
+        
     </script>
 
 </body>

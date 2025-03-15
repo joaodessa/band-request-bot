@@ -1,59 +1,112 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Que Bandas Queres Ver ao Vivo?</title>
+    <title>CrowdMusic - Pedidos de Bandas</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
-
+        /* General Page Styling */
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: Arial, sans-serif;
             text-align: center;
             background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
+            padding: 0;
         }
-        .card {
-            background: #ffffff;
-            max-width: 500px;
-            width: 100%;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        input, select, button {
-            width: 90%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-        }
-        button {
-            background-color: #E30613; /* CrowdMusic Red */
+
+        /* 🔥 HEADER STYLES 🔥 */
+        .header {
+            background-color: #D92027; /* Red from CrowdMusic */
             color: white;
+            padding: 15px 20px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-logo img {
+            height: 40px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
             font-weight: bold;
-            border: none;
-            cursor: pointer;
             transition: 0.3s;
         }
-        button:hover {
-            background-color: #C00510;
+
+        .nav-links a:hover {
+            text-decoration: underline;
         }
+
+        /* Main Content Adjustments */
+        .container {
+            max-width: 500px;
+            margin: 100px auto 50px; /* Push down to avoid overlap */
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+
+        input, select, button {
+            width: 80%;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #D92027; /* Red button */
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #B61C23; /* Slightly darker red */
+        }
+
         #response {
-            margin-top: 15px;
+            margin-top: 20px;
             font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <div class="card">
+
+    <!-- 🔥 HEADER 🔥 -->
+    <div class="header">
+        <div class="header-logo">
+            <img src="https://www.crowdmusic.pt/img/logo.png" alt="CrowdMusic Logo">
+        </div>
+        <div class="nav-links">
+            <a href="#">Início</a>
+            <a href="#">Sobre</a>
+            <a href="#">Contactos</a>
+        </div>
+    </div>
+
+    <!-- 🔹 FORM SECTION -->
+    <div class="container">
         <h2>Que Bandas Queres Ver Ao Vivo?</h2>
+
+        <!-- Band Name Input -->
         <input type="text" id="bandName" placeholder="Nome da Banda">
+
+        <!-- City Selection Dropdown -->
         <select id="cityName">
             <option value="" disabled selected>Em que cidade?</option>
             <option value="Aveiro">Aveiro</option>
@@ -68,21 +121,28 @@
             <option value="Vigo">Vigo</option>
             <option value="Viseu">Viseu</option>
         </select>
+
+        <!-- Submit Button -->
         <button onclick="submitRequest()">Pedir Banda!</button>
+        
+        <!-- Response Message -->
         <p id="response"></p>
-        <h3>Bandas Mais Pedidas</h3>
-        <button onclick="fetchTopBands()">Mostrar Top Bandas</button>
-        <ul id="topBandsList"></ul>
+
+        <h3>🎤 Bandas Mais Pedidas</h3>
+        <button onclick="fetchTopBands()">🔍 Ver Top Bandas</button>
+        <div id="topBandsList" class="top-bands-container"></div>
     </div>
 
     <script>
         function submitRequest() {
             const bandName = document.getElementById("bandName").value;
             const cityName = document.getElementById("cityName").value;
+
             if (!bandName || !cityName) {
                 document.getElementById("response").innerText = "Insere uma banda e uma cidade!";
                 return;
             }
+
             fetch("/add_band", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -103,16 +163,26 @@
             .then(data => {
                 const list = document.getElementById("topBandsList");
                 list.innerHTML = "";
-                data.top_bands.split("\n").forEach(band => {
-                    if (band.trim()) {
-                        const li = document.createElement("li");
-                        li.innerText = band;
-                        list.appendChild(li);
-                    }
+                let bandsArray = data.top_bands.split("\n").filter(band => band.trim());
+
+                bandsArray.forEach((band, index) => {
+                    let [bandName, count] = band.split(": ");
+
+                    const bandCard = document.createElement("div");
+                    bandCard.classList.add("band-card");
+
+                    bandCard.innerHTML = `
+                        <span class="band-rank">#${index + 1}</span>
+                        <span class="band-name">${bandName}</span>
+                        <span class="band-count">🔥 ${count} pedidos</span>
+                    `;
+
+                    list.appendChild(bandCard);
                 });
             })
             .catch(error => console.error("Error:", error));
         }
     </script>
+
 </body>
 </html>

@@ -1,50 +1,48 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pede a Tua Banda - CrowdMusic</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Que Bandas Queres Ver ao Vivo?</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #121212;
-            color: #fff;
             text-align: center;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             margin: 0;
-            padding: 0;
         }
-        .container {
-            max-width: 600px;
-            margin: 60px auto;
-            background: #1e1e1e;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-        }
-        h2 {
-            color: #ffcc00;
+        .card {
+            background: #ffffff;
+            max-width: 500px;
+            width: 100%;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
         }
         input, select, button {
-            width: 100%;
+            width: 90%;
             padding: 12px;
             margin: 10px 0;
             border-radius: 8px;
-            border: none;
+            border: 1px solid #ccc;
             font-size: 16px;
         }
-        input, select {
-            background: #2a2a2a;
-            color: #fff;
-        }
         button {
-            background-color: #ffcc00;
-            color: #121212;
+            background-color: #E30613; /* CrowdMusic Red */
+            color: white;
             font-weight: bold;
+            border: none;
             cursor: pointer;
+            transition: 0.3s;
         }
         button:hover {
-            background-color: #e6b800;
+            background-color: #C00510;
         }
         #response {
             margin-top: 15px;
@@ -53,8 +51,8 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Que Bandas Queres Ver ao Vivo?</h2>
+    <div class="card">
+        <h2>Que Bandas Queres Ver Ao Vivo?</h2>
         <input type="text" id="bandName" placeholder="Nome da Banda">
         <select id="cityName">
             <option value="" disabled selected>Em que cidade?</option>
@@ -64,7 +62,7 @@
             <option value="Coruna">A Coruña</option>
             <option value="Faro">Faro</option>
             <option value="Leiria">Leiria</option>
-            <option value="Lisboa">Lisboa</option>
+            <option value="Lisboa">Lisbon</option>
             <option value="Porto">Porto</option>
             <option value="Santiago de Compostela">Santiago de Compostela</option>
             <option value="Vigo">Vigo</option>
@@ -73,7 +71,7 @@
         <button onclick="submitRequest()">Pedir Banda!</button>
         <p id="response"></p>
         <h3>Bandas Mais Pedidas</h3>
-        <button onclick="fetchTopBands()">Ver Top Bandas</button>
+        <button onclick="fetchTopBands()">Mostrar Top Bandas</button>
         <ul id="topBandsList"></ul>
     </div>
 
@@ -81,12 +79,10 @@
         function submitRequest() {
             const bandName = document.getElementById("bandName").value;
             const cityName = document.getElementById("cityName").value;
-
             if (!bandName || !cityName) {
                 document.getElementById("response").innerText = "Insere uma banda e uma cidade!";
                 return;
             }
-
             fetch("/add_band", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

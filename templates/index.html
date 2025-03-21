@@ -59,6 +59,8 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            <div id="recommendations" style="margin-top: 20px;"></div>
+
         }
 
         /* 🎯 FORM STYLING */
@@ -218,20 +220,30 @@
             fetch("/top_bands")
             .then(response => response.json())
             .then(data => {
-                const list = document.getElementById("topBandsList");
-                list.innerHTML = "";  // Clear previous results
+                document.getElementById("response").innerText = data.message;
+                document.getElementById("bandName").value = "";
+                document.getElementById("cityName").selectedIndex = 0;
 
-                const bands = data.top_bands.split("\n").filter(b => b.trim()); // Remove empty lines
+                const recContainer = document.getElementById("recommendations");
+                recContainer.innerHTML = "";
 
-                // 🚨 FIX: Ensure we don't include the title "Most requested bands"
-                if (bands.length > 0 && bands[0].toLowerCase().includes("most requested bands")) {
-                    bands.shift(); // Remove the first entry if it's the title
+                if (data.recommendations && data.recommendations.length > 0) {
+                    const title = document.createElement("h4");
+                    title.innerText = "🎧 You might also like:";
+                    recContainer.appendChild(title);
+
+                    data.recommendations.forEach(artist => {
+                        const button = document.createElement("button");
+                        button.innerText = artist;
+                        button.onclick = () => {
+                            document.getElementById("bandName").value = artist;
+                            document.getElementById("response").innerText = `Selected: ${artist}. Choose a city and submit again!`;
+                        };
+                        recContainer.appendChild(button);
+                    });
                 }
+            })
 
-                if (bands.length === 0) {
-                    list.innerHTML = "<p>Nenhuma banda foi pedida ainda.</p>";
-                    return;
-                }
 
                 // Display bands as a ranked list with correct formatting
                 bands.forEach((band, index) => {
